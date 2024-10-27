@@ -1,18 +1,28 @@
-# Instructions
+# Project 3: Implement the SimPL-F Interpreter
 
-### Part 1: Standard evaluation
+## Part 1: Variables and Assignments
 
-Implement the `eval` method on all subclasses of `Expr`. This should evaluate the expression to produce a floating point value.
+For this part, you will need to implement the `Environment` class in `Environment.java`, as well as the relevant functions in `Interpreter.java`:
+* `visitVarStmt`
+* `visitBlockStmt`
+* `visitVarExpr`
+* `visitAssignExpr`
 
-### Part 2: Visitor-pattern evaluation
+You may make use of the association list implemented in `AssocList.java` in your implementation of environments.
+This part is worth 10 points and is tested using the files `tests/Expressions.simplf` and `tests/Variables.simplf`.
 
-Re-implement expression evaluation using the visitor pattern. This requires implementing the `accept` method on all subclasses of `Expr`, the `ExprVisitor` interface, and the `ExprEvaluator` class.
+## Part 2: Control Flow
 
-### Reference output
+For this part, you will implement if statements, while loops, and for loops. You should implement the following functions in `Interpreter.java`:
+* `visitIfStmt`
+* `visitWhileStmt`
+You should also implement the function `visitForStmt` in `Desugar.java`.
+This part is worth 5 points and is tested using the file `tests/ControlFlow.simplf`.
 
-When your program is complete, your output should match the results in the `ref_out` file.
+## Part 3 Functions
 
-# Command to run the application
-```
-make; make run
-```
+For this part, you should implement functions. This will require implementing:
+* The `SimplfFunction` class in `SimplfFunction.java`.
+* The `visitFunctionStmt` in `Interpreter.java`, and
+* The `visitCallExpr` in `Interpreter.java`
+This part is worth 5 points and is tested using the file `tests/Functions.simplf`.
