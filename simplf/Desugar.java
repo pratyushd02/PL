@@ -80,9 +80,27 @@ public class Desugar implements Expr.Visitor<Expr>, Stmt.Visitor<Stmt> {
     }
 
     @Override
-    public Stmt visitForStmt(For stmt) {
-        throw new UnsupportedOperationException("TODO: desugar for loops");
+    public Stmt visitForStmt(Stmt.For stmt) {
+    List<Stmt> body = new ArrayList<>();
+
+    if (stmt.init != null) {
+        body.add(new Stmt.Expression(stmt.init));  
     }
+
+    Stmt whileBody = stmt.body;
+
+    if (stmt.incr != null) {
+        List<Stmt> loopBodyWithIncrement = new ArrayList<>();
+        loopBodyWithIncrement.add(whileBody);  
+        loopBodyWithIncrement.add(new Stmt.Expression(stmt.incr));  
+        whileBody = new Stmt.Block(loopBodyWithIncrement);  
+    }
+
+    Stmt whileLoop = new Stmt.While(stmt.cond, whileBody);
+    body.add(whileLoop);
+
+    return new Stmt.Block(body);
+}
 
     @Override
     public Stmt visitFunctionStmt(Function stmt) {

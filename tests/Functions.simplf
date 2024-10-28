@@ -12,6 +12,7 @@ fun fact(n)
     else{
         ret = n*fact(n-1);
     }
+    print(ret);
     ret;
 }
 

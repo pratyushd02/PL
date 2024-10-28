@@ -1,42 +1,55 @@
-package simplf; 
+package simplf;
 
 class Environment {
+    public AssocList assocList;
+    public final Environment outer;  
+
     Environment() {
-        throw new UnsupportedOperationException("TODO: implement environments.");
+        this.assocList = null;
+        this.outer = null;  
     }
 
-    Environment(Environment enclosing) {
-        throw new UnsupportedOperationException("TODO: implement environments.");
+    Environment(Environment outer) {
+        this.assocList = null;
+        this.outer = outer;  
     }
 
-    Environment(AssocList assocList, Environment enclosing) {
-        throw new UnsupportedOperationException("TODO: implement environments.");
+    Environment(AssocList assocList, Environment outer) {
+        this.assocList = assocList;
+        this.outer = outer; 
     }
 
-    // Return a new version of the environment that defines the variable "name"
-    // and sets its initial value to "value". Take care to ensure the proper aliasing
-    // relationship. There is an association list implementation in Assoclist.java.
-    // If your "define" function adds a new entry to the association list without
-    // modifying the previous list, this should yield the correct aliasing
-    // relationsip.
-    //
-    // For example, if the original environment has the association list
-    // [{name: "x", value: 1}, {name: "y", value: 2}]
-    // the new environment after calling define(..., "z", 3) should have the following
-    //  association list:
-    // [{name: "z", value: 3}, {name: "x", value: 1}, {name: "y", value: 2}]
-    // This should be constructed by building a new class of type AssocList whose "next"
-    // reference is the previous AssocList.
     Environment define(Token varToken, String name, Object value) {
-        throw new UnsupportedOperationException("TODO: implement environments.");
+        AssocList newAssocList = new AssocList(name, value, this.assocList);
+        this.assocList = newAssocList;
+        return new Environment(newAssocList, this); 
     }
 
     void assign(Token name, Object value) {
-        throw new UnsupportedOperationException("TODO: implement environments.");
+        for (Environment env = this; env != null; env = env.outer) {  
+            for (AssocList assoc = env.assocList; assoc != null; assoc = assoc.next) {
+                if (assoc.name.equals(name.lexeme)) {
+                    assoc.value = value;
+                    return;
+                }
+            }
+        }
+        throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'");
     }
 
-    Object get(Token name) {
-        throw new UnsupportedOperationException("TODO: implement environments.");
+    public Object get(Token name) {
+        for (AssocList assoc = this.assocList; assoc != null; assoc = assoc.next) {
+            if (assoc.name.equals(name.lexeme)) {
+                return assoc.value;
+            }
+        }
+
+        if (this.outer != null) {
+            return this.outer.get(name);  
+        }
+
+        throw new RuntimeException("Undefined variable '" + name.lexeme + "'");
     }
+
+
 }
-
