@@ -5,7 +5,7 @@
 % Helper predicates
 
 % Check if a door is passable
-passable(CurrentRoom, NextRoom, Keys) :-
+passable(CurrentRoom, NextRoom, _Keys) :-
     door(CurrentRoom, NextRoom);
     door(NextRoom, CurrentRoom).
 
@@ -21,7 +21,7 @@ pickup_keys(CurrentRoom, Keys, UpdatedKeys) :-
         UpdatedKeys = Keys).
 
 % BFS for shortest path
-bfs([[Path, CurrentRoom, Keys] | _], Path) :-
+bfs([[Path, CurrentRoom, _] | _], Path) :-  % Replaced Keys with _
     treasure(CurrentRoom).
 
 bfs([[Path, CurrentRoom, Keys] | RestQueue], Solution) :-
@@ -38,6 +38,7 @@ bfs([[Path, CurrentRoom, Keys] | RestQueue], Solution) :-
     ),
     append(RestQueue, NewPaths, FilteredQueue),
     bfs(FilteredQueue, Solution).
+
 
 % Filter the queue to avoid revisiting the same room with the same keys
 filter_queue([], _, []).
